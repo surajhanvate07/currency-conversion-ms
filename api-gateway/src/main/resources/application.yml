@@ -8,6 +8,7 @@ spring:
             - Path=/api/v1/users/**
           filters:
             - StripPrefix=2
+            - name: UserLoggingFilter
 
         - id: currency-exchange-service
           uri: lb://CURRENCY-EXCHANGE-SERVICE

@@ -3,13 +3,14 @@ package com.suraj.currency.api_gateway.filter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
 @Slf4j
-public class GlobalLoggingFilter implements GlobalFilter {
+public class GlobalLoggingFilter implements GlobalFilter, Ordered {
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -20,5 +21,14 @@ public class GlobalLoggingFilter implements GlobalFilter {
 				.then(Mono.fromRunnable(() -> {
 					log.info("Global Logging Filter Post: Response Status: {}", exchange.getResponse().getStatusCode());
 				}));
+	}
+
+	/**
+	 * This method defines the order of this filter in the filter chain.
+	 * Lower values have higher precedence.
+	 */
+	@Override
+	public int getOrder() {
+		return -1;
 	}
 }
