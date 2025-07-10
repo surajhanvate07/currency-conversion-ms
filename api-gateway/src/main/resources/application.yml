@@ -16,6 +16,9 @@ spring:
             - Path=/api/v1/currency-exchange/**
           filters:
             - StripPrefix=2
+            - name: Authentication
+              args:
+                enabled: true
 
         - id: currency-conversion-service
           uri: lb://CURRENCY-CONVERSION-SERVICE
