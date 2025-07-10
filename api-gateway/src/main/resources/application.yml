@@ -27,3 +27,6 @@ spring:
             - Path=/api/v1/currency-conversion/**
           filters:
             - StripPrefix=2
+            - name: Authentication
+              args:
+                enabled: true
