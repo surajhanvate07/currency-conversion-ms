@@ -18,4 +18,9 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handleGenericException(Exception ex) {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + ex.getLocalizedMessage());
 	}
+
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input: " + ex.getLocalizedMessage());
+	}
 }

@@ -1,27 +1,31 @@
 package com.suraj.currency.currency_conversion_service.service;
 
-import com.suraj.currency.currency_conversion_service.client.CurrencyExchangeFeignClient;
-import com.suraj.currency.currency_conversion_service.exception.CurrencyPairNotFoundException;
 import com.suraj.currency.currency_conversion_service.response.CurrencyConversionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import feign.FeignException;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class CurrencyConversionService {
 
-	private final CurrencyExchangeFeignClient currencyExchangeFeignClient;
+	private final CurrencyExchangeRateService currencyExchangeRateService;
 
 	public CurrencyConversionResponse convertCurrency(String from, String to, double amount) {
 		log.info("Converting {} from {} to {}", amount, from, to);
-
+		if (from == null || to == null || from.trim().isEmpty() || to.trim().isEmpty()) {
+			log.error("Currency codes cannot be null or empty");
+			throw new IllegalArgumentException("Currency codes cannot be null or empty");
+		}
+		if (amount <= 0) {
+			log.error("Amount must be greater than zero");
+			throw new IllegalArgumentException("Amount must be greater than zero");
+		}
 		try {
 			log.info("Fetching conversion rate from currency exchange service for {} to {}", from, to);
 			// Fetching the conversion rate from a currency exchange service
-			double conversionRateFromService = currencyExchangeFeignClient.getExchangeRate(from, to);
+			double conversionRateFromService = currencyExchangeRateService.getExchangeRate(from, to);
 			log.info("Conversion rate from {} to {}: {}", from, to, conversionRateFromService);
 
 			// Calculate the converted amount
@@ -35,11 +39,8 @@ public class CurrencyConversionService {
 					.conversionRate(conversionRateFromService)
 					.totalCalculatedAmount(convertedAmount)
 					.build();
-		} catch (FeignException.NotFound ex) {
-			log.error("Currency pair not found: {} to {}", from, to);
-			throw new CurrencyPairNotFoundException("Currency pair not found for " + from + " to " + to);
-		} catch (FeignException ex) {
-			log.error("Error fetching conversion rate: {}", ex.getMessage());
+		} catch (Exception ex) {
+			log.error("Error occurred while fetching: {}", ex.getMessage());
 			throw new RuntimeException("Currency conversion failed: " + ex.getMessage());
 		}
 
