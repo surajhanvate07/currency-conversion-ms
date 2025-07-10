@@ -16,6 +16,7 @@ spring:
             - Path=/api/v1/currency-exchange/**
           filters:
             - StripPrefix=2
+            - name: CurrencyExchangeLoggingFilter
             - name: Authentication
               args:
                 enabled: true
