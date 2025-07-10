@@ -1,0 +1,24 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - StripPrefix=2
+
+        - id: currency-exchange-service
+          uri: lb://CURRENCY-EXCHANGE-SERVICE
+          predicates:
+            - Path=/api/v1/currency-exchange/**
+          filters:
+            - StripPrefix=2
+
+        - id: currency-conversion-service
+          uri: lb://CURRENCY-CONVERSION-SERVICE
+          predicates:
+            - Path=/api/v1/currency-conversion/**
+          filters:
+            - StripPrefix=2
