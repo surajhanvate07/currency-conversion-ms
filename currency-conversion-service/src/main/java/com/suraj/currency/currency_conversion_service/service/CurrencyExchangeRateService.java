@@ -17,7 +17,7 @@ public class CurrencyExchangeRateService {
 
 	@Cacheable(value = "exchangeRates", key = "#from + ':' + #to")
 	public double getExchangeRate(String from, String to) {
-		log.info("Fetching exchange rate currencyExchangeFeignClient");
+		log.info("Fetching exchange rate CurrencyExchangeFeignClient");
 		try {
 			double exchangeRate = currencyExchangeFeignClient.getExchangeRate(from, to);
 			log.info("Exchange rate from {} to {}: {}", from, to, exchangeRate);
