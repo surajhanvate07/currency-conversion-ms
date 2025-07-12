@@ -1,44 +1,5 @@
 spring:
-  cloud:
-    gateway:
-      routes:
-        - id: user-service
-          uri: lb://USER-SERVICE
-          predicates:
-            - Path=/api/v1/users/**
-          filters:
-            - StripPrefix=2
-            - name: UserLoggingFilter
-
-        - id: currency-exchange-service
-          uri: lb://CURRENCY-EXCHANGE-SERVICE
-          predicates:
-            - Path=/api/v1/currency-exchange/**
-          filters:
-            - StripPrefix=2
-            - name: CurrencyExchangeLoggingFilter
-            - name: Authentication
-              args:
-                enabled: true
-
-        - id: currency-conversion-service
-          uri: lb://CURRENCY-CONVERSION-SERVICE
-          predicates:
-            - Path=/api/v1/currency-conversion/**
-          filters:
-            - StripPrefix=2
-            - name: Authentication
-              args:
-                enabled: true
-
-
-  zipkin:
-    baseUrl: http://localhost:9411
-
-
-management:
-  tracing:
-    sampling:
-        probability: 1.0
-
-
+  application:
+    name: api-gateway
+  config:
+    import: configserver:http://localhost:8888
